@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,28 +19,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wastracheck.ui.theme.BackgroundLight
 import com.example.wastracheck.ui.theme.BrownPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminLoginScreen(navController: NavController? = null) {
+fun AdminLoginScreen(navController: NavController) {
+    var adminId by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundLight),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-        
-        IconButton(
-            onClick = { navController?.navigateUp() },
-            modifier = Modifier.align(Alignment.Start).padding(start = 16.dp)
-        ) {
-            Icon(Icons.Default.ArrowBack, contentDescription = null, tint = BrownPrimary)
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(60.dp))
         
         // Admin Icon
         Surface(
@@ -49,7 +44,7 @@ fun AdminLoginScreen(navController: NavController? = null) {
             color = BrownPrimary
         ) {
             Icon(
-                Icons.Default.AdminPanelSettings,
+                Icons.Default.Shield,
                 contentDescription = null,
                 modifier = Modifier.padding(16.dp),
                 tint = Color.White
@@ -97,11 +92,11 @@ fun AdminLoginScreen(navController: NavController? = null) {
                 
                 Text("ADMIN ID / EMAIL", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.DarkGray)
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = adminId,
+                    onValueChange = { adminId = it },
                     placeholder = { Text("Enter your credentials") },
                     modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = { Icon(Icons.Default.PersonOutline, contentDescription = null) },
+                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                     shape = RoundedCornerShape(12.dp)
                 )
                 
@@ -112,11 +107,11 @@ fun AdminLoginScreen(navController: NavController? = null) {
                     Text("Forgot password?", fontSize = 12.sp, color = Color(0xFF4F5CBF))
                 }
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = password,
+                    onValueChange = { password = it },
                     placeholder = { Text("••••••••") },
                     modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
+                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     trailingIcon = { Icon(Icons.Default.Visibility, contentDescription = null) },
                     visualTransformation = PasswordVisualTransformation(),
                     shape = RoundedCornerShape(12.dp)
@@ -125,7 +120,12 @@ fun AdminLoginScreen(navController: NavController? = null) {
                 Spacer(modifier = Modifier.height(32.dp))
                 
                 Button(
-                    onClick = { navController?.navigate("admin_motif") },
+                    onClick = { 
+                        // Simple logic: navigate if not empty
+                        if (adminId.isNotEmpty()) {
+                            navController.navigate("admin_motif")
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -135,7 +135,7 @@ fun AdminLoginScreen(navController: NavController? = null) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Authenticate", fontSize = 16.sp)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Icon(Icons.Default.ArrowForward, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
                     }
                 }
                 
@@ -167,5 +167,5 @@ fun AdminLoginScreen(navController: NavController? = null) {
 @Preview(showBackground = true)
 @Composable
 fun AdminLoginScreenPreview() {
-    AdminLoginScreen()
+    AdminLoginScreen(rememberNavController())
 }

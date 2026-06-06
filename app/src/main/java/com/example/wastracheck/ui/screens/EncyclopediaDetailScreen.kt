@@ -20,19 +20,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wastracheck.ui.theme.BrownPrimary
 import com.example.wastracheck.ui.theme.BackgroundLight
 import com.example.wastracheck.ui.theme.TextGray
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EncyclopediaDetailScreen() {
+fun EncyclopediaDetailScreen(navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("WASTRA-CHECK", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = BrownPrimary) },
-                navigationIcon = { IconButton(onClick = {}) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = BrownPrimary) } },
-                actions = { IconButton(onClick = {}) { Icon(Icons.Default.AccountCircle, contentDescription = null, tint = BrownPrimary) } },
+                navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = BrownPrimary) } },
+                actions = { IconButton(onClick = { navController.navigate("profile") }) { Icon(Icons.Default.AccountCircle, contentDescription = null, tint = BrownPrimary) } },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
             )
         }
@@ -121,7 +123,7 @@ fun EncyclopediaDetailScreen() {
         
         // FAB
         Box(modifier = Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.BottomEnd) {
-            FloatingActionButton(onClick = {}, containerColor = BrownPrimary, contentColor = Color.White) {
+            FloatingActionButton(onClick = { /* TODO: Save to Bookmark Logic */ }, containerColor = BrownPrimary, contentColor = Color.White) {
                 Icon(Icons.Default.Bookmark, contentDescription = null)
             }
         }
@@ -129,7 +131,7 @@ fun EncyclopediaDetailScreen() {
 }
 
 @Composable
-fun UsageItem(title: String, desc: String) {
+private fun UsageItem(title: String, desc: String) {
     Column(modifier = Modifier.width(200.dp)) {
         Box(modifier = Modifier.fillMaxWidth().height(120.dp).clip(RoundedCornerShape(12.dp)).background(Color.LightGray))
         Spacer(modifier = Modifier.height(8.dp))
@@ -141,5 +143,5 @@ fun UsageItem(title: String, desc: String) {
 @Preview(showBackground = true)
 @Composable
 fun EncyclopediaDetailScreenPreview() {
-    EncyclopediaDetailScreen()
+    EncyclopediaDetailScreen(rememberNavController())
 }

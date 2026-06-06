@@ -1,13 +1,13 @@
 package com.example.wastracheck.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,18 +15,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wastracheck.ui.theme.BrownPrimary
 import com.example.wastracheck.ui.theme.BackgroundLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectTextileScreen() {
+fun SelectTextileScreen(navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -39,12 +40,12 @@ fun SelectTextileScreen() {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = BrownPrimary)
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = BrownPrimary)
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { navController.navigate("profile") }) {
                         Icon(Icons.Default.AccountCircle, contentDescription = null, tint = BrownPrimary)
                     }
                 },
@@ -84,7 +85,7 @@ fun SelectTextileScreen() {
             Spacer(modifier = Modifier.height(32.dp))
             
             Button(
-                onClick = { /* TODO */ },
+                onClick = { navController.navigate("result") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -116,7 +117,6 @@ fun SelectTextileScreen() {
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // Grid of photos placeholder
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -129,6 +129,7 @@ fun SelectTextileScreen() {
                             .aspectRatio(1f)
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color.LightGray)
+                            .clickable { navController.navigate("result") }
                     ) {
                         if (index == 0) {
                             Icon(
@@ -148,5 +149,5 @@ fun SelectTextileScreen() {
 @Preview(showBackground = true)
 @Composable
 fun SelectTextileScreenPreview() {
-    SelectTextileScreen()
+    SelectTextileScreen(rememberNavController())
 }

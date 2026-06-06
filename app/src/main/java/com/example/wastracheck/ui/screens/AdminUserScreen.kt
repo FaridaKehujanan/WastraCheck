@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -17,13 +18,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wastracheck.ui.theme.BrownPrimary
 import com.example.wastracheck.ui.theme.BackgroundLight
-import com.example.wastracheck.ui.theme.TextGray
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminUserScreen() {
+fun AdminUserScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -32,6 +34,11 @@ fun AdminUserScreen() {
                         Icon(Icons.Default.Shield, contentDescription = null, modifier = Modifier.size(20.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Wastra-Check Admin", fontSize = 16.sp)
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },
                 actions = {
@@ -43,6 +50,28 @@ fun AdminUserScreen() {
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             )
+        },
+        bottomBar = {
+            NavigationBar(containerColor = Color.White) {
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Dashboard, null) },
+                    label = { Text("DASHBOARD") },
+                    selected = false,
+                    onClick = { /* TODO */ }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Palette, null) },
+                    label = { Text("MOTIFS") },
+                    selected = false,
+                    onClick = { navController.navigate("admin_motif") }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Group, null) },
+                    label = { Text("USERS") },
+                    selected = true,
+                    onClick = { }
+                )
+            }
         }
     ) { padding ->
         Column(
@@ -84,7 +113,7 @@ fun AdminUserScreen() {
             Card(
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().weight(1f)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     OutlinedTextField(
@@ -99,7 +128,7 @@ fun AdminUserScreen() {
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        items(4) {
+                        items(10) {
                             UserItem()
                         }
                     }
@@ -110,7 +139,7 @@ fun AdminUserScreen() {
 }
 
 @Composable
-fun AdminStatCard(label: String, value: String, trend: String, trendColor: Color, icon: ImageVector, modifier: Modifier = Modifier) {
+private fun AdminStatCard(label: String, value: String, trend: String, trendColor: Color, icon: ImageVector, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -129,7 +158,7 @@ fun AdminStatCard(label: String, value: String, trend: String, trendColor: Color
 }
 
 @Composable
-fun UserItem() {
+private fun UserItem() {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
         Surface(shape = CircleShape, color = Color.LightGray, modifier = Modifier.size(40.dp)) {
             Icon(Icons.Default.Person, contentDescription = null, tint = Color.Gray)
@@ -150,5 +179,5 @@ fun UserItem() {
 @Preview(showBackground = true)
 @Composable
 fun AdminUserScreenPreview() {
-    AdminUserScreen()
+    AdminUserScreen(rememberNavController())
 }

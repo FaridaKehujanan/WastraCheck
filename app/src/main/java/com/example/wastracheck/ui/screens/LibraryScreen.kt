@@ -1,36 +1,69 @@
 package com.example.wastracheck.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wastracheck.ui.theme.BrownPrimary
 import com.example.wastracheck.ui.theme.BackgroundLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LibraryScreen() {
+fun LibraryScreen(navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("WASTRA-CHECK", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = BrownPrimary) },
-                navigationIcon = { IconButton(onClick = {}) { Icon(Icons.Default.ArrowBack, contentDescription = null, tint = BrownPrimary) } },
-                actions = { IconButton(onClick = {}) { Icon(Icons.Default.AccountCircle, contentDescription = null, tint = BrownPrimary) } },
+                navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = BrownPrimary) } },
+                actions = { IconButton(onClick = { navController.navigate("profile") }) { Icon(Icons.Default.AccountCircle, contentDescription = null, tint = BrownPrimary) } },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
             )
+        },
+        bottomBar = {
+            NavigationBar(containerColor = Color.White) {
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Explore, null) },
+                    label = { Text("EXPLORE") },
+                    selected = false,
+                    onClick = { navController.navigate("encyclopedia_detail") }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.CenterFocusStrong, null) },
+                    label = { Text("SCAN") },
+                    selected = false,
+                    onClick = { navController.navigate("scan") }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.AutoMirrored.Filled.LibraryBooks, null) },
+                    label = { Text("LIBRARY") },
+                    selected = true,
+                    onClick = { }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.AutoMirrored.Filled.MenuBook, null) },
+                    label = { Text("ENCYCLOPEDIA") },
+                    selected = false,
+                    onClick = { navController.navigate("encyclopedia_detail") }
+                )
+            }
         }
     ) { padding ->
         Column(
@@ -63,10 +96,9 @@ fun LibraryScreen() {
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Large item (Mega Mendung) - normally you'd use a custom span or handle this differently
-                // For UI mock, let's just put standard items
                 items(6) { index ->
                     Card(
+                        modifier = Modifier.clickable { navController.navigate("encyclopedia_detail") },
                         colors = CardDefaults.cardColors(containerColor = Color.White),
                         shape = RoundedCornerShape(12.dp),
                         elevation = CardDefaults.cardElevation(2.dp)
@@ -88,5 +120,5 @@ fun LibraryScreen() {
 @Preview(showBackground = true)
 @Composable
 fun LibraryScreenPreview() {
-    LibraryScreen()
+    LibraryScreen(rememberNavController())
 }

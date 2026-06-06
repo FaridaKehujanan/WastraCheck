@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -17,20 +18,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wastracheck.ui.theme.BrownPrimary
 import com.example.wastracheck.ui.theme.BackgroundLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminMotifScreen(navController: NavController? = null) {
+fun AdminMotifScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = { navController?.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
-                    }
-                },
                 title = { 
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Default.Shield, contentDescription = null, modifier = Modifier.size(20.dp))
@@ -38,17 +35,42 @@ fun AdminMotifScreen(navController: NavController? = null) {
                         Text("Wastra-Check Admin", fontSize = 16.sp)
                     }
                 },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
                 actions = {
-                    IconButton(onClick = { navController?.navigate("admin_user") }) {
-                        Surface(shape = CircleShape, color = BrownPrimary.copy(alpha = 0.1f), modifier = Modifier.size(32.dp)) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Text("AU", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrownPrimary)
-                            }
+                    Surface(shape = CircleShape, color = BrownPrimary.copy(alpha = 0.1f), modifier = Modifier.size(32.dp)) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text("AU", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrownPrimary)
                         }
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             )
+        },
+        bottomBar = {
+            NavigationBar(containerColor = Color.White) {
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Dashboard, null) },
+                    label = { Text("DASHBOARD") },
+                    selected = false,
+                    onClick = { /* TODO */ }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Palette, null) },
+                    label = { Text("MOTIFS") },
+                    selected = true,
+                    onClick = { }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Group, null) },
+                    label = { Text("USERS") },
+                    selected = false,
+                    onClick = { navController.navigate("admin_user") }
+                )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {}, containerColor = BrownPrimary, contentColor = Color.White) {
@@ -89,10 +111,8 @@ fun AdminMotifScreen(navController: NavController? = null) {
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
-                    focusedBorderColor = BrownPrimary,
-                    unfocusedBorderColor = Color.LightGray
+                    focusedContainerColor = Color.White
                 )
             )
             
@@ -105,7 +125,7 @@ fun AdminMotifScreen(navController: NavController? = null) {
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.weight(1f)) {
                 items(3) {
                     MotifAdminCard()
                 }
@@ -115,7 +135,7 @@ fun AdminMotifScreen(navController: NavController? = null) {
 }
 
 @Composable
-fun MotifAdminCard() {
+private fun MotifAdminCard() {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(2.dp),
@@ -151,5 +171,5 @@ fun MotifAdminCard() {
 @Preview(showBackground = true)
 @Composable
 fun AdminMotifScreenPreview() {
-    AdminMotifScreen()
+    AdminMotifScreen(rememberNavController())
 }
