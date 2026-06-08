@@ -43,7 +43,7 @@ fun LibraryScreen(navController: NavController) {
                     icon = { Icon(Icons.Default.Explore, null) },
                     label = { Text("EXPLORE") },
                     selected = false,
-                    onClick = { navController.navigate("encyclopedia_detail") }
+                    onClick = { navController.navigate("explore") }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.CenterFocusStrong, null) },

@@ -64,10 +64,10 @@ fun ProfileScreen(navController: NavController, authViewModel: AuthViewModel = v
                     onClick = { navController.navigate("library") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, null) },
-                    label = { Text("PROFILE") },
-                    selected = true,
-                    onClick = { }
+                    icon = { Icon(Icons.Default.MenuBook, null) },
+                    label = { Text("ENCYCLOPEDIA") },
+                    selected = false,
+                    onClick = { navController.navigate("encyclopedia_detail") }
                 )
             }
         }

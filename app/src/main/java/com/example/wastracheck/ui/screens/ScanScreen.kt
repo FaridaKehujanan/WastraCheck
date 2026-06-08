@@ -150,6 +150,11 @@ fun ScanScreen(navController: NavController, viewModel: BatikAiViewModel) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = BrownPrimary)
                     }
                 },
+                actions = {
+                    IconButton(onClick = { navController.navigate("profile") }) {
+                        Icon(Icons.Default.AccountCircle, contentDescription = "Profile", tint = BrownPrimary)
+                    }
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White.copy(alpha = 0.7f))
             )
 

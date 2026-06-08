@@ -50,6 +50,9 @@ fun ExploreScreen(navController: NavController) {
                     IconButton(onClick = { /* TODO */ }) {
                         Icon(Icons.Default.Search, contentDescription = "Search")
                     }
+                    IconButton(onClick = { navController.navigate("profile") }) {
+                        Icon(Icons.Default.AccountCircle, contentDescription = "Profile", tint = BrownPrimary)
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
@@ -75,10 +78,10 @@ fun ExploreScreen(navController: NavController) {
                     onClick = { navController.navigate("library") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, null) },
-                    label = { Text("PROFILE") },
+                    icon = { Icon(Icons.Default.MenuBook, null) },
+                    label = { Text("ENCYCLOPEDIA") },
                     selected = false,
-                    onClick = { navController.navigate("profile") }
+                    onClick = { navController.navigate("encyclopedia_detail") }
                 )
             }
         }
