@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,7 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,16 +40,62 @@ fun ExploreScreen(
     viewModel: ExploreViewModel = viewModel()
 ) {
     val motifs by viewModel.motifs.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
+
+    var isSearchActive by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Explore Wastra", fontWeight = FontWeight.Bold, color = BrownPrimary) },
+                title = {
+                    if (isSearchActive) {
+                        TextField(
+                            value = searchQuery,
+                            onValueChange = { viewModel.onSearchQueryChange(it) },
+                            placeholder = { 
+                                Text(
+                                    "Cari batik...", 
+                                    fontSize = 16.sp, 
+                                    color = Color.Gray 
+                                ) 
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            singleLine = true,
+                            textStyle = TextStyle(
+                                color = Color.Black,
+                                fontSize = 16.sp
+                            ),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                cursorColor = BrownPrimary
+                            ),
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            trailingIcon = {
+                                IconButton(onClick = { 
+                                    viewModel.onSearchQueryChange("")
+                                    isSearchActive = false 
+                                }) {
+                                    Icon(Icons.Default.Close, contentDescription = "Close", tint = BrownPrimary)
+                                }
+                            }
+                        )
+                    } else {
+                        Text("Explore Wastra", fontWeight = FontWeight.Bold, color = BrownPrimary)
+                    }
+                },
                 actions = {
-                    IconButton(onClick = { /* TODO */ }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
+                    if (!isSearchActive) {
+                        IconButton(onClick = { isSearchActive = true }) {
+                            Icon(Icons.Default.Search, contentDescription = "Search", tint = BrownPrimary)
+                        }
                     }
                     IconButton(onClick = { navController.navigate("profile") }) {
                         Icon(Icons.Default.AccountCircle, contentDescription = "Profile", tint = BrownPrimary)
@@ -76,10 +125,10 @@ fun ExploreScreen(
                     onClick = { navController.navigate("library") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.MenuBook, null) },
-                    label = { Text("ENCYCLOPEDIA") },
+                    icon = { Icon(Icons.Default.EmojiEvents, null) },
+                    label = { Text("CHALLENGE") },
                     selected = false,
-                    onClick = { navController.navigate("encyclopedia_detail/1") }
+                    onClick = { navController.navigate("batik_challenge") }
                 )
             }
         }
@@ -90,18 +139,20 @@ fun ExploreScreen(
                 .padding(padding)
                 .background(BackgroundLight)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    "Discover Heritage",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = BrownPrimary
-                )
-                Text(
-                    "Explore the beauty of Indonesian motifs",
-                    fontSize = 14.sp,
-                    color = TextGray
-                )
+            if (!isSearchActive) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        "Discover Heritage",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = BrownPrimary
+                    )
+                    Text(
+                        "Explore the beauty of Indonesian motifs",
+                        fontSize = 14.sp,
+                        color = TextGray
+                    )
+                }
             }
 
             if (isLoading) {
@@ -112,6 +163,14 @@ fun ExploreScreen(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(text = error!!, color = Color.Red)
                 }
+            } else if (motifs.isEmpty() && searchQuery.isNotEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.SearchOff, contentDescription = null, modifier = Modifier.size(64.dp), tint = Color.LightGray)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text("Motif '$searchQuery' tidak ditemukan", color = Color.Gray)
+                    }
+                }
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -120,7 +179,7 @@ fun ExploreScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(motifs) { motif ->
+                    items(motifs, key = { it.id }) { motif ->
                         MotifCard(motif) {
                             navController.navigate("encyclopedia_detail/${motif.id}")
                         }

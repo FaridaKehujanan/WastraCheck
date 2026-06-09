@@ -74,7 +74,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(text = "WASTRA-CHECK", fontSize = 32.sp, fontWeight = FontWeight.Black, color = Color.White)
-                Text(text = "Authenticating Heritage Through AI", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+                Text(text = "Auntetikasi Warisan Budaya Melalui AI", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
             }
         }
 
@@ -84,14 +84,14 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
             modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Welcome Back", fontSize = 24.sp, fontWeight = FontWeight.Black, color = BrownPrimary)
-            Text(text = "Discover the stories woven into every thread.", fontSize = 14.sp, color = Color.Gray, textAlign = TextAlign.Center)
+            Text(text = "Selamat Datang Kembali", fontSize = 24.sp, fontWeight = FontWeight.Black, color = BrownPrimary)
+            Text(text = "Temukan Kisah Yang Terjalin di Setiap Helai Benang.", fontSize = 14.sp, color = Color.Gray, textAlign = TextAlign.Center)
 
             Spacer(modifier = Modifier.height(32.dp))
 
             // Email Field dengan Font Paling Bold (Black/W900)
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text("Email Address", fontSize = 14.sp, fontWeight = FontWeight.Black, color = Color.Black)
+                Text("Alamat Email", fontSize = 14.sp, fontWeight = FontWeight.Black, color = Color.Black)
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -99,7 +99,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
                     leadingIcon = { Icon(Icons.Default.Email, null, tint = BrownPrimary) },
                     shape = RoundedCornerShape(12.dp),
                     textStyle = TextStyle(fontWeight = FontWeight.Black, fontSize = 16.sp, color = Color.Black),
-                    placeholder = { Text("your-email@example.com", fontWeight = FontWeight.Bold, color = Color.Gray) },
+                    placeholder = { Text("pengguna@gmail.com", fontWeight = FontWeight.Bold, color = Color.Gray) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = BrownPrimary,
                         unfocusedBorderColor = Color.Black,
@@ -113,8 +113,8 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
             // Password Field dengan Font Paling Bold (Black/W900)
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text("Password", fontSize = 14.sp, fontWeight = FontWeight.Black, color = Color.Black)
-                    TextButton(onClick = { }) { Text("FORGOT?", fontSize = 10.sp, color = Color.Gray, fontWeight = FontWeight.Black) }
+                    Text("Kata Sandi", fontSize = 14.sp, fontWeight = FontWeight.Black, color = Color.Black)
+                    TextButton(onClick = { }) { Text("Lupa Kata Sandi?", fontSize = 10.sp, color = Color.Gray, fontWeight = FontWeight.Black) }
                 }
                 OutlinedTextField(
                     value = password,
@@ -146,7 +146,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
                 enabled = authState != AuthState.Loading
             ) {
                 if (authState == AuthState.Loading) CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
-                else Text("Sign In", fontSize = 18.sp, fontWeight = FontWeight.Black)
+                else Text("Masuk", fontSize = 18.sp, fontWeight = FontWeight.Black)
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -154,9 +154,9 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
             Text(
                 text = buildAnnotatedString {
                     append("belum punya akun? ")
-                    withStyle(style = SpanStyle(color = BrownPrimary, fontWeight = FontWeight.Black)) { append("registrasi disini") }
+                    withStyle(style = SpanStyle(color = BrownPrimary, fontWeight = FontWeight.Black)) { append("Daftar Sekarang") }
                 },
-                modifier = Modifier.clickable { navController.navigate("register") },
+                modifier = Modifier.clickable { navController.navigate("Daftar") },
                 fontSize = 14.sp, color = Color.Gray
             )
         }

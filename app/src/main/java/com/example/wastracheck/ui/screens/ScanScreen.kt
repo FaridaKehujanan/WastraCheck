@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.LibraryBooks
-import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -111,10 +110,10 @@ fun ScanScreen(
                     onClick = { navController.navigate("library") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.AutoMirrored.Filled.MenuBook, null) },
-                    label = { Text("ENSIKLOPEDIA") },
+                    icon = { Icon(Icons.Default.EmojiEvents, null) },
+                    label = { Text("TANTANGAN") },
                     selected = false,
-                    onClick = { navController.navigate("encyclopedia_detail/1") }
+                    onClick = { navController.navigate("batik_challenge") }
                 )
             }
         }

@@ -1,5 +1,8 @@
 package com.example.wastracheck.ui.screens
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,8 +14,7 @@ import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.FilterCenterFocus
 import androidx.compose.material.icons.filled.FilterVintage
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,10 +35,18 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
+    var progress by remember { mutableStateOf(0f) }
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = tween(durationMillis = 3000, easing = LinearEasing),
+        label = "LoadingProgress"
+    )
+
     // Logic: Delay 3 seconds then navigate to Login
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
+        progress = 1f
         delay(3000)
-        navController.navigate("login") {
+        navController.navigate("login") { // Diubah kembali ke "login"
             popUpTo("splash") { inclusive = true }
         }
     }
@@ -103,9 +113,15 @@ fun SplashScreen(navController: NavController) {
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 100.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(modifier = Modifier.width(220.dp).height(4.dp).clip(RoundedCornerShape(2.dp)).background(Color(0xFF4F5CBF).copy(alpha = 0.15f))) {
-                Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(0.35f).background(Color(0xFF4F5CBF)))
-            }
+            LinearProgressIndicator(
+                progress = { animatedProgress },
+                modifier = Modifier
+                    .width(220.dp)
+                    .height(4.dp)
+                    .clip(RoundedCornerShape(2.dp)),
+                color = Color(0xFF4F5CBF),
+                trackColor = Color(0xFF4F5CBF).copy(alpha = 0.15f)
+            )
             Spacer(modifier = Modifier.height(32.dp))
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                 Icon(Icons.Default.AutoAwesome, null, Modifier.size(14.dp).offset(x = (-8).dp), Color.LightGray)

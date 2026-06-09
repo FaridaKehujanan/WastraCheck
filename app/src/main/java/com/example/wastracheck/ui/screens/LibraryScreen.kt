@@ -66,10 +66,10 @@ fun LibraryScreen(
                     onClick = { }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.MenuBook, null) },
-                    label = { Text("ENSIKLOPEDIA") },
+                    icon = { Icon(Icons.Default.EmojiEvents, null) },
+                    label = { Text("TANTANGAN") },
                     selected = false,
-                    onClick = { navController.navigate("encyclopedia_detail/1") }
+                    onClick = { navController.navigate("batik_challenge") }
                 )
             }
         }

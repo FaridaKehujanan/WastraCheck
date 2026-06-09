@@ -34,7 +34,6 @@ fun WastraNavHost() {
     val database = WastraDatabase.getDatabase(context)
 
     // Menggunakan ViewModelFactory tunggal untuk semua ViewModel yang butuh DAO
-    // Karena satu package dengan MainActivity, kelas ini otomatis terbaca tanpa import tambahan
     val factory = ViewModelFactory(
         userDao = database.userDao(),
         motifDao = database.motifDao()
@@ -54,13 +53,12 @@ fun WastraNavHost() {
         composable("scan") { ScanScreen(navController, batikViewModel, exploreViewModel) }
         composable("select_textile") { SelectTextileScreen(navController) }
         composable("result") { ResultScreen(navController, batikViewModel) }
+        composable("batik_challenge") { BatikChallengeScreen(navController, exploreViewModel) }
         composable(
             "encyclopedia_detail/{motifId}",
             arguments = listOf(navArgument("motifId") { type = NavType.StringType })
         ) { backStackEntry ->
             val motifId = backStackEntry.arguments?.getString("motifId")
-            // EncyclopediaDetailScreen memiliki parameter default untuk viewModel, 
-            // tapi kita bisa meneruskan exploreViewModel jika ingin berbagi state.
             EncyclopediaDetailScreen(navController, motifId, exploreViewModel)
         }
         composable("library") { LibraryScreen(navController, libraryViewModel) }

@@ -47,27 +47,27 @@ fun ProfileScreen(navController: NavController, authViewModel: AuthViewModel = v
             NavigationBar(containerColor = Color.White) {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Explore, null) },
-                    label = { Text("EXPLORE") },
+                    label = { Text("JELAJAH") },
                     selected = false,
                     onClick = { navController.navigate("explore") }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.CenterFocusStrong, null) },
-                    label = { Text("SCAN") },
+                    label = { Text("PINDAI") },
                     selected = false,
                     onClick = { navController.navigate("scan") }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.LibraryBooks, null) },
-                    label = { Text("LIBRARY") },
+                    label = { Text("KOLEKSI") },
                     selected = false,
                     onClick = { navController.navigate("library") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.MenuBook, null) },
-                    label = { Text("ENCYCLOPEDIA") },
-                    selected = false,
-                    onClick = { navController.navigate("encyclopedia_detail") }
+                    icon = { Icon(Icons.Default.EmojiEvents, null) },
+                    label = { Text("TANTANGAN") },
+                    selected = true,
+                    onClick = { navController.navigate("batik_challenge") }
                 )
             }
         }
@@ -118,12 +118,12 @@ fun ProfileScreen(navController: NavController, authViewModel: AuthViewModel = v
                 text = currentUser?.name ?: "Guest",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = BrownPrimary
+                color = Color.Black
             )
             Text(
                 text = currentUser?.email ?: "Not logged in",
                 fontSize = 14.sp,
-                color = TextGray
+                color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -159,8 +159,8 @@ fun ProfileScreen(navController: NavController, authViewModel: AuthViewModel = v
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
-                        Text("Heritage Level 2", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                        Text("450 points until Master Curator status", fontSize = 12.sp, color = TextGray)
+                        Text("Heritage Level 2", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color.Black)
+                        Text("450 points until Master Curator status", fontSize = 12.sp, color = Color.Gray)
                         Spacer(modifier = Modifier.height(8.dp))
                         LinearProgressIndicator(
                             progress = { 0.6f },
@@ -203,7 +203,7 @@ fun ProfileScreen(navController: NavController, authViewModel: AuthViewModel = v
                 SettingsItem(
                     icon = Icons.AutoMirrored.Filled.Logout, 
                     title = "Logout",
-                    textColor = Color(0xFFE57373),
+                    textColor = Color(0xFFFF1744), // Brighter Red
                     onClick = {
                         authViewModel.logout()
                         navController.navigate("login") {
@@ -222,14 +222,14 @@ fun ProfileScreen(navController: NavController, authViewModel: AuthViewModel = v
 fun ProfileStat(value: String, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF4F5CBF))
-        Text(label, fontSize = 12.sp, color = TextGray)
+        Text(label, fontSize = 12.sp, color = Color.Gray)
     }
 }
 
 @Composable
 fun SettingsSection(title: String, content: @Composable ColumnScope.() -> Unit) {
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp)) {
-        Text(title, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextGray)
+        Text(title, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.DarkGray)
         Spacer(modifier = Modifier.height(8.dp))
         Card(
             colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -254,12 +254,12 @@ fun SettingsItem(
             .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically) {
-        Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp), tint = TextGray)
+        Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp), tint = if (textColor == Color.Black) Color.DarkGray else textColor)
         Spacer(modifier = Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(title, fontSize = 14.sp, color = textColor)
+            Text(title, fontSize = 14.sp, color = textColor, fontWeight = FontWeight.Medium)
             if (subtitle != null) {
-                Text(subtitle, fontSize = 12.sp, color = TextGray)
+                Text(subtitle, fontSize = 12.sp, color = Color.Gray)
             }
         }
         Icon(Icons.Default.ChevronRight, contentDescription = null, modifier = Modifier.size(20.dp), tint = Color.LightGray)

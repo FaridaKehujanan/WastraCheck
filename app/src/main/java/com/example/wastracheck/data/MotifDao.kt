@@ -14,6 +14,9 @@ interface MotifDao {
     @Query("SELECT * FROM motifs WHERE region = :region")
     fun getMotifsByRegion(region: String): Flow<List<WastraMotif>>
 
+    @Query("SELECT * FROM motifs WHERE name LIKE '%' || :searchQuery || '%' OR origin LIKE '%' || :searchQuery || '%'")
+    fun searchMotifs(searchQuery: String): Flow<List<WastraMotif>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMotifs(motifs: List<WastraMotif>)
 }
