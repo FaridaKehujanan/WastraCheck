@@ -1,5 +1,6 @@
 package com.example.wastracheck.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,33 +15,30 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.wastracheck.ExploreViewModel
+import com.example.wastracheck.data.WastraMotif
 import com.example.wastracheck.ui.theme.BrownPrimary
 import com.example.wastracheck.ui.theme.BackgroundLight
 import com.example.wastracheck.ui.theme.TextGray
 
-data class WastraMotif(val id: String, val name: String, val origin: String, val description: String)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExploreScreen(navController: NavController) {
-    val motifs = listOf(
-        WastraMotif("1", "Parang Kusumo", "Solo", "Melambangkan perjuangan jiwa melawan hawa nafsu."),
-        WastraMotif("2", "Mega Mendung", "Cirebon", "Melambangkan dunia atas yang luas dan bebas."),
-        WastraMotif("3", "Sido Mukti", "Solo", "Harapan agar pemakainya mencapai kebahagiaan lahir batin."),
-        WastraMotif("4", "Sekar Jagad", "Yogyakarta", "Melambangkan keragaman suku bangsa di dunia."),
-        WastraMotif("5", "Kawung", "Yogyakarta", "Melambangkan keadilan dan keperkasaan."),
-        WastraMotif("6", "Truntum", "Solo", "Melambangkan cinta yang tumbuh kembali."),
-        WastraMotif("7", "Sidoluhur", "Solo", "Melambangkan harapan untuk menjadi teladan."),
-        WastraMotif("8", "Slobog", "Solo", "Melambangkan keteguhan hati."),
-        WastraMotif("9", "Pring Sedapur", "Magetan", "Melambangkan persatuan dan kerukunan."),
-        WastraMotif("10", "Sidomulyo", "Solo", "Melambangkan kemuliaan dan hidup berkecukupan.")
-    )
+fun ExploreScreen(
+    navController: NavController,
+    viewModel: ExploreViewModel = viewModel()
+) {
+    val motifs by viewModel.motifs.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
 
     Scaffold(
         topBar = {
@@ -81,7 +79,7 @@ fun ExploreScreen(navController: NavController) {
                     icon = { Icon(Icons.Default.MenuBook, null) },
                     label = { Text("ENCYCLOPEDIA") },
                     selected = false,
-                    onClick = { navController.navigate("encyclopedia_detail") }
+                    onClick = { navController.navigate("encyclopedia_detail/1") }
                 )
             }
         }
@@ -106,16 +104,26 @@ fun ExploreScreen(navController: NavController) {
                 )
             }
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(motifs) { motif ->
-                    MotifCard(motif) {
-                        navController.navigate("encyclopedia_detail")
+            if (isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = BrownPrimary)
+                }
+            } else if (error != null) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = error!!, color = Color.Red)
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(motifs) { motif ->
+                        MotifCard(motif) {
+                            navController.navigate("encyclopedia_detail/${motif.id}")
+                        }
                     }
                 }
             }
@@ -140,12 +148,21 @@ fun MotifCard(motif: WastraMotif, onClick: () -> Unit) {
                     .height(140.dp)
                     .background(BrownPrimary.copy(alpha = 0.1f))
             ) {
-                Icon(
-                    Icons.Default.Pattern,
-                    contentDescription = null,
-                    modifier = Modifier.align(Alignment.Center).size(60.dp),
-                    tint = BrownPrimary.copy(alpha = 0.3f)
-                )
+                if (motif.imageRes != null) {
+                    Image(
+                        painter = painterResource(id = motif.imageRes),
+                        contentDescription = motif.name,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        Icons.Default.Pattern,
+                        contentDescription = null,
+                        modifier = Modifier.align(Alignment.Center).size(60.dp),
+                        tint = BrownPrimary.copy(alpha = 0.3f)
+                    )
+                }
             }
             Column(modifier = Modifier.padding(12.dp)) {
                 Text(
@@ -171,10 +188,4 @@ fun MotifCard(motif: WastraMotif, onClick: () -> Unit) {
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ExploreScreenPreview() {
-    ExploreScreen(rememberNavController())
 }

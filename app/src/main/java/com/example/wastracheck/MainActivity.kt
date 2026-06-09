@@ -7,9 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.wastracheck.data.WastraDatabase
 import com.example.wastracheck.ui.screens.*
 import com.example.wastracheck.ui.theme.WastraCheckTheme
@@ -30,23 +32,43 @@ class MainActivity : ComponentActivity() {
 fun WastraNavHost() {
     val context = LocalContext.current
     val database = WastraDatabase.getDatabase(context)
-    val factory = AuthViewModelFactory(database.userDao())
-    
+
+    // Menggunakan ViewModelFactory tunggal untuk semua ViewModel yang butuh DAO
+    // Karena satu package dengan MainActivity, kelas ini otomatis terbaca tanpa import tambahan
+    val factory = ViewModelFactory(
+        userDao = database.userDao(),
+        motifDao = database.motifDao()
+    )
+
     val navController = rememberNavController()
     val batikViewModel: BatikAiViewModel = viewModel()
     val authViewModel: AuthViewModel = viewModel(factory = factory)
-    
+    val libraryViewModel: LibraryViewModel = viewModel(factory = factory)
+    val exploreViewModel: ExploreViewModel = viewModel(factory = factory)
+
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController) }
         composable("login") { LoginScreen(navController, authViewModel) }
         composable("register") { RegisterScreen(navController, authViewModel) }
-        composable("explore") { ExploreScreen(navController) }
-        composable("scan") { ScanScreen(navController, batikViewModel) }
+        composable("explore") { ExploreScreen(navController, exploreViewModel) }
+        composable("scan") { ScanScreen(navController, batikViewModel, exploreViewModel) }
         composable("select_textile") { SelectTextileScreen(navController) }
         composable("result") { ResultScreen(navController, batikViewModel) }
-        composable("encyclopedia_detail") { EncyclopediaDetailScreen(navController) }
-        composable("library") { LibraryScreen(navController) }
+        composable(
+            "encyclopedia_detail/{motifId}",
+            arguments = listOf(navArgument("motifId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val motifId = backStackEntry.arguments?.getString("motifId")
+            // EncyclopediaDetailScreen memiliki parameter default untuk viewModel, 
+            // tapi kita bisa meneruskan exploreViewModel jika ingin berbagi state.
+            EncyclopediaDetailScreen(navController, motifId, exploreViewModel)
+        }
+        composable("library") { LibraryScreen(navController, libraryViewModel) }
         composable("profile") { ProfileScreen(navController, authViewModel) }
+        composable("edit_profile") { EditProfileScreen(navController) }
+        composable("notifications") { NotificationSettingsScreen(navController) }
+        composable("language") { LanguageSettingsScreen(navController) }
+        composable("privacy_policy") { PrivacyPolicyScreen(navController) }
         composable("admin_login") { AdminLoginScreen(navController) }
         composable("admin_motif") { AdminMotifScreen(navController) }
         composable("admin_user") { AdminUserScreen(navController) }

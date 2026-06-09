@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.wastracheck"
-    compileSdk = 35 // Menggunakan versi stabil terbaru
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.wastracheck"
@@ -52,7 +52,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     
-    // AI and Image - Versi 0.9.0 (Terbaru & Stabil)
+    // AI and Image
     implementation(libs.google.generativeai)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.coil.compose)

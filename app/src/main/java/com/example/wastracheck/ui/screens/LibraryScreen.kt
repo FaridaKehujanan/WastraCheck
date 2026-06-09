@@ -1,33 +1,41 @@
 package com.example.wastracheck.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.LibraryBooks
-import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.example.wastracheck.LibraryViewModel
+import com.example.wastracheck.data.WastraMotif
 import com.example.wastracheck.ui.theme.BrownPrimary
 import com.example.wastracheck.ui.theme.BackgroundLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LibraryScreen(navController: NavController) {
+fun LibraryScreen(
+    navController: NavController,
+    viewModel: LibraryViewModel
+) {
+    val savedMotifs by viewModel.savedMotifs.collectAsState()
+    val selectedRegion by viewModel.selectedRegion.collectAsState()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -41,27 +49,27 @@ fun LibraryScreen(navController: NavController) {
             NavigationBar(containerColor = Color.White) {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Explore, null) },
-                    label = { Text("EXPLORE") },
+                    label = { Text("JELAJAH") },
                     selected = false,
                     onClick = { navController.navigate("explore") }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.CenterFocusStrong, null) },
-                    label = { Text("SCAN") },
+                    label = { Text("PINDAI") },
                     selected = false,
                     onClick = { navController.navigate("scan") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.AutoMirrored.Filled.LibraryBooks, null) },
-                    label = { Text("LIBRARY") },
+                    icon = { Icon(Icons.Default.LibraryBooks, null) },
+                    label = { Text("KOLEKSI") },
                     selected = true,
                     onClick = { }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.AutoMirrored.Filled.MenuBook, null) },
-                    label = { Text("ENCYCLOPEDIA") },
+                    icon = { Icon(Icons.Default.MenuBook, null) },
+                    label = { Text("ENSIKLOPEDIA") },
                     selected = false,
-                    onClick = { navController.navigate("encyclopedia_detail") }
+                    onClick = { navController.navigate("encyclopedia_detail/1") }
                 )
             }
         }
@@ -73,42 +81,46 @@ fun LibraryScreen(navController: NavController) {
                 .background(BackgroundLight)
                 .padding(16.dp)
         ) {
-            Text("Library", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-            Text("Your curated collection of Indonesian heritage.", fontSize = 14.sp, color = Color.Gray)
+            Text("Koleksi Saya", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+            Text("Kumpulan warisan budaya Indonesia pilihan Anda.", fontSize = 14.sp, color = Color.Gray)
             
             Spacer(modifier = Modifier.height(24.dp))
             
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(
-                    selected = true,
-                    onClick = {},
-                    label = { Text("All Collections") },
-                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = BrownPrimary, selectedLabelColor = Color.White)
-                )
-                FilterChip(selected = false, onClick = {}, label = { Text("Central Java") })
-                FilterChip(selected = false, onClick = {}, label = { Text("West Java") })
+            // Filter Berdasarkan Wilayah (Logic Room)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val regions = listOf("Semua", "Jawa Barat", "Jawa Tengah", "Jawa Timur")
+                regions.forEach { region ->
+                    FilterChip(
+                        selected = selectedRegion == region,
+                        onClick = { viewModel.setRegion(region) },
+                        label = { Text(region) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = BrownPrimary,
+                            selectedLabelColor = Color.White
+                        )
+                    )
+                }
             }
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(6) { index ->
-                    Card(
-                        modifier = Modifier.clickable { navController.navigate("encyclopedia_detail") },
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
-                        shape = RoundedCornerShape(12.dp),
-                        elevation = CardDefaults.cardElevation(2.dp)
-                    ) {
-                        Column {
-                            Box(modifier = Modifier.fillMaxWidth().height(120.dp).background(Color.LightGray))
-                            Column(modifier = Modifier.padding(8.dp)) {
-                                Text("Parang Rusak", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                                Text("Oct 12, 2023", fontSize = 10.sp, color = Color.Gray)
-                            }
+            if (savedMotifs.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Belum ada koleksi di wilayah ini", color = Color.Gray)
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(savedMotifs, key = { it.id }) { motif ->
+                        SavedMotifCard(motif) {
+                            navController.navigate("encyclopedia_detail/${motif.id}")
                         }
                     }
                 }
@@ -117,8 +129,40 @@ fun LibraryScreen(navController: NavController) {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun LibraryScreenPreview() {
-    LibraryScreen(rememberNavController())
+fun SavedMotifCard(motif: WastraMotif, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(2.dp)
+    ) {
+        Column {
+            Box(modifier = Modifier.fillMaxWidth().height(120.dp).background(Color.LightGray)) {
+                if (motif.imageRes != null) {
+                    Image(
+                        painter = painterResource(id = motif.imageRes),
+                        contentDescription = motif.name,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    text = motif.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    maxLines = 1
+                )
+                Text(
+                    text = motif.region,
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
+            }
+        }
+    }
 }

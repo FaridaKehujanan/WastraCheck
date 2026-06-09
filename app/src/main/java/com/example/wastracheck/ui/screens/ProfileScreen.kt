@@ -176,16 +176,33 @@ fun ProfileScreen(navController: NavController, authViewModel: AuthViewModel = v
 
             // Settings Sections
             SettingsSection("Account Preferences") {
-                SettingsItem(Icons.Default.PersonOutline, "Edit Profile")
-                SettingsItem(Icons.Default.NotificationsNone, "Notification Settings")
-                SettingsItem(Icons.Default.Language, "Language", "Bahasa Indonesia")
+                SettingsItem(
+                    icon = Icons.Default.PersonOutline, 
+                    title = "Edit Profile",
+                    onClick = { navController.navigate("edit_profile") }
+                )
+                SettingsItem(
+                    icon = Icons.Default.NotificationsNone, 
+                    title = "Notification Settings",
+                    onClick = { navController.navigate("notifications") }
+                )
+                SettingsItem(
+                    icon = Icons.Default.Language, 
+                    title = "Language", 
+                    subtitle = "Bahasa Indonesia",
+                    onClick = { navController.navigate("language") }
+                )
             }
 
             SettingsSection("Legal & Security") {
-                SettingsItem(Icons.Default.PrivacyTip, "Privacy Policy")
                 SettingsItem(
-                    Icons.AutoMirrored.Filled.Logout, 
-                    "Logout", 
+                    icon = Icons.Default.PrivacyTip, 
+                    title = "Privacy Policy",
+                    onClick = { navController.navigate("privacy_policy") }
+                )
+                SettingsItem(
+                    icon = Icons.AutoMirrored.Filled.Logout, 
+                    title = "Logout",
                     textColor = Color(0xFFE57373),
                     onClick = {
                         authViewModel.logout()
