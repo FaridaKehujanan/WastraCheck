@@ -67,8 +67,5 @@ fun WastraNavHost() {
         composable("notifications") { NotificationSettingsScreen(navController) }
         composable("language") { LanguageSettingsScreen(navController) }
         composable("privacy_policy") { PrivacyPolicyScreen(navController) }
-        composable("admin_login") { AdminLoginScreen(navController) }
-        composable("admin_motif") { AdminMotifScreen(navController) }
-        composable("admin_user") { AdminUserScreen(navController) }
     }
 }

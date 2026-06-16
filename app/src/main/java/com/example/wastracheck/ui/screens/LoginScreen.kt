@@ -85,7 +85,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "Selamat Datang Kembali", fontSize = 24.sp, fontWeight = FontWeight.Black, color = BrownPrimary)
-            Text(text = "Temukan Kisah Yang Terjalin di Setiap Helai Benang.", fontSize = 14.sp, color = Color.Gray, textAlign = TextAlign.Center)
+            Text(text = "Temukan Kisah Yang Terjalin di Setiap Helai Benang.", fontSize = 14.sp, color = BrownPrimary.copy(alpha = 0.7f), textAlign = TextAlign.Center)
 
             Spacer(modifier = Modifier.height(32.dp))
 

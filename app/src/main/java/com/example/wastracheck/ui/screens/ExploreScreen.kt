@@ -144,13 +144,13 @@ fun ExploreScreen(
                     Text(
                         "Discover Heritage",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.ExtraBold,
                         color = BrownPrimary
                     )
                     Text(
                         "Explore the beauty of Indonesian motifs",
                         fontSize = 14.sp,
-                        color = TextGray
+                        color = BrownPrimary.copy(alpha = 0.7f)
                     )
                 }
             }

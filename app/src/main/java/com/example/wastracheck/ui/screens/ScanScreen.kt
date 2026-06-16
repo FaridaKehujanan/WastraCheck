@@ -53,6 +53,7 @@ fun ScanScreen(
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
     
     val preview = remember { Preview.Builder().build() }
+    val imageCapture = remember { ImageCapture.Builder().build() }
     val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     
     val allMotifs by exploreViewModel.allMotifs.collectAsState()
@@ -81,7 +82,21 @@ fun ScanScreen(
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { showBottomSheet = true },
+                onClick = {
+                    val executor = ContextCompat.getMainExecutor(context)
+                    imageCapture.takePicture(executor, object : ImageCapture.OnImageCapturedCallback() {
+                        override fun onCaptureSuccess(image: ImageProxy) {
+                            val bitmap = image.toBitmap()
+                            batikViewModel.analyzeBatik(bitmap)
+                            image.close()
+                            navController.navigate("result")
+                        }
+
+                        override fun onError(exception: ImageCaptureException) {
+                            Log.e("ScanScreen", "Capture failed", exception)
+                        }
+                    })
+                },
                 containerColor = BrownPrimary,
                 contentColor = Color.White,
                 icon = { Icon(Icons.Default.CameraAlt, contentDescription = null) },
@@ -131,7 +146,8 @@ fun ScanScreen(
                                 cameraProvider.bindToLifecycle(
                                     lifecycleOwner,
                                     cameraSelector,
-                                    preview
+                                    preview,
+                                    imageCapture
                                 )
                             } catch (e: Exception) {
                                 Log.e("ScanScreen", "Camera binding failed", e)
@@ -193,7 +209,7 @@ fun ScanScreen(
                         "Pilih Motif Terdeteksi",
                         modifier = Modifier.padding(16.dp),
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.ExtraBold,
                         color = BrownPrimary
                     )
                     
@@ -241,7 +257,7 @@ fun MotifBottomSheetItem(motif: WastraMotif, onClick: () -> Unit) {
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(text = motif.name, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = BrownPrimary)
-                Text(text = motif.region, fontSize = 12.sp, color = Color.Gray)
+                Text(text = motif.region, fontSize = 12.sp, color = BrownPrimary.copy(alpha = 0.6f))
             }
             Spacer(modifier = Modifier.weight(1f))
             Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color.LightGray)

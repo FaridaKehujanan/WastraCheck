@@ -81,8 +81,8 @@ fun LibraryScreen(
                 .background(BackgroundLight)
                 .padding(16.dp)
         ) {
-            Text("Koleksi Saya", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-            Text("Kumpulan warisan budaya Indonesia pilihan Anda.", fontSize = 14.sp, color = Color.Gray)
+            Text("Koleksi Saya", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = BrownPrimary)
+            Text("Kumpulan warisan budaya Indonesia pilihan Anda.", fontSize = 14.sp, color = BrownPrimary.copy(alpha = 0.7f))
             
             Spacer(modifier = Modifier.height(24.dp))
             
@@ -155,12 +155,13 @@ fun SavedMotifCard(motif: WastraMotif, onClick: () -> Unit) {
                     text = motif.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
+                    color = BrownPrimary,
                     maxLines = 1
                 )
                 Text(
                     text = motif.region,
                     fontSize = 12.sp,
-                    color = Color.Gray
+                    color = BrownPrimary.copy(alpha = 0.6f)
                 )
             }
         }

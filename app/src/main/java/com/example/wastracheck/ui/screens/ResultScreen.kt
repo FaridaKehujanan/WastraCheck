@@ -65,7 +65,7 @@ fun ResultScreen(navController: NavController, viewModel: BatikAiViewModel) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             CircularProgressIndicator(color = BrownPrimary)
                             Spacer(modifier = Modifier.height(16.dp))
-                            Text("Gemini sedang menganalisis motif...", color = Color.Gray)
+                            Text("Groq Llama sedang menganalisis motif...", color = Color.Gray)
                         }
                     }
                 }
