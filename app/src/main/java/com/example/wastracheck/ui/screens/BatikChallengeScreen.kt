@@ -33,7 +33,7 @@ fun BatikChallengeScreen(
     navController: NavController,
     viewModel: ExploreViewModel
 ) {
-    val motifs by viewModel.motifs.collectAsState()
+    val motifs by viewModel.allMotifs.collectAsState()
     var currentQuestionIndex by remember { mutableIntStateOf(0) }
     var score by remember { mutableIntStateOf(0) }
     var showResult by remember { mutableStateOf(false) }

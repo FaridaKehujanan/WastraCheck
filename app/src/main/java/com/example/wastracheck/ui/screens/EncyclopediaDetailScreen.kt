@@ -134,11 +134,19 @@ fun EncyclopediaDetailScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    Text("Penggunaan Tradisional", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BrownPrimary)
+                    Text("Rekomendasi Penggunaan", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BrownPrimary)
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(modifier = Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        UsageItem("Upacara Adat", "Sering digunakan dalam upacara adat penting.")
-                        UsageItem("Pakaian Harian", "Interpretasi modern memungkinkan untuk dipakai sehari-hari.")
+                        UsageItem(
+                            title = "Upacara Adat",
+                            desc = motif.ceremonyDesc.ifEmpty { "Digunakan dalam berbagai upacara adat tradisional." },
+                            imageRes = motif.ceremonyImage
+                        )
+                        UsageItem(
+                            title = "Inspirasi Gaya",
+                            desc = motif.dailyWearDesc.ifEmpty { "Cocok dipadukan dengan gaya busana modern untuk kegiatan formal maupun santai." },
+                            imageRes = motif.dailyWearImage
+                        )
                     }
                     
                     Spacer(modifier = Modifier.height(40.dp))
@@ -160,12 +168,28 @@ fun EncyclopediaDetailScreen(
 }
 
 @Composable
-private fun UsageItem(title: String, desc: String) {
+private fun UsageItem(title: String, desc: String, imageRes: Int? = null) {
     Column(modifier = Modifier.width(200.dp)) {
-        Box(modifier = Modifier.fillMaxWidth().height(120.dp).clip(RoundedCornerShape(12.dp)).background(Color.LightGray))
+        Box(modifier = Modifier.fillMaxWidth().height(120.dp).clip(RoundedCornerShape(12.dp)).background(Color.LightGray)) {
+            if (imageRes != null) {
+                Image(
+                    painter = painterResource(id = imageRes),
+                    contentDescription = title,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Icon(
+                    Icons.Default.Image,
+                    contentDescription = null,
+                    modifier = Modifier.align(Alignment.Center).size(40.dp),
+                    tint = Color.Gray
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(8.dp))
-        Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-        Text(desc, fontSize = 12.sp, color = TextGray)
+        Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = BrownPrimary)
+        Text(desc, fontSize = 12.sp, color = TextGray, lineHeight = 16.sp)
     }
 }
 

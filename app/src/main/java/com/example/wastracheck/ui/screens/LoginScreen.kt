@@ -156,7 +156,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
                     append("belum punya akun? ")
                     withStyle(style = SpanStyle(color = BrownPrimary, fontWeight = FontWeight.Black)) { append("Daftar Sekarang") }
                 },
-                modifier = Modifier.clickable { navController.navigate("Daftar") },
+                modifier = Modifier.clickable { navController.navigate("register") },
                 fontSize = 14.sp, color = Color.Gray
             )
         }

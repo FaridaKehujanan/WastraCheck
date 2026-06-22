@@ -11,5 +11,9 @@ data class WastraMotif(
     val description: String,
     val philosophy: String = "",
     val imageRes: Int? = null,
-    val region: String = "Jawa Tengah"
+    val region: String = "Jawa Tengah",
+    val ceremonyDesc: String = "",
+    val ceremonyImage: Int? = null,
+    val dailyWearDesc: String = "",
+    val dailyWearImage: Int? = null
 )
